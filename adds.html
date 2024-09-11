@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Data Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        input, select {
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Student Data</h1>
+        
+        <div>
+            <h2>Student List</h2>
+            <select id="studentSelect" onchange="populateForm()">
+                <option value="">Select a student</option>
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+        
+        <div id="updateForm" style="display: none;">
+            <h2>Update Details</h2>
+            <form onsubmit="updateStudent(event)">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+                
+                <label for="age">Age:</label>
+                <input type="number" id="age" required>
+                
+                <label for="grade">Grade:</label>
+                <input type="text" id="grade" required>
+                
+                <input type="hidden" id="studentId">
+                
+                <button type="submit">Update Student</button>
+            </form>
+        </div>
+        
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        // Sample data
+        const students = [
+            { id: 1, name: 'Ankit yadav', age: 15, grade: '10th' },
+            { id: 2, name: 'Aman upadhyay', age: 14, grade: '9th' },
+            { id: 3, name: 'Ankit singh', age: 16, grade: '11th' }
+        ];
+
+        // Populate the student dropdown
+        function populateStudentSelect() {
+            const select = document.getElementById('studentSelect');
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (ID: ${student.id})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Populate form with selected student data
+        function populateForm() {
+            const id = document.getElementById('studentSelect').value;
+            const student = students.find(s => s.id == id);
+
+            if (student) {
+                document.getElementById('name').value = student.name;
+                document.getElementById('age').value = student.age;
+                document.getElementById('grade').value = student.grade;
+                document.getElementById('studentId').value = student.id;
+                document.getElementById('updateForm').style.display = 'block';
+            } else {
+                document.getElementById('updateForm').style.display = 'none';
+            }
+        }
+
+        // Update student data
+        function updateStudent(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('studentId').value;
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const grade = document.getElementById('grade').value;
+
+            const student = students.find(s => s.id == id);
+            if (student) {
+                student.name = name;
+                student.age = age;
+                student.grade = grade;
+                
+                document.getElementById('result').textContent = `Student ${name} updated successfully.`;
+                document.getElementById('updateForm').style.display = 'none';
+                populateStudentSelect();  // Refresh the student list
+            }
+        }
+
+        // Initialize
+        populateStudentSelect();
+    </script>
+</body>
+</html>
